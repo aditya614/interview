@@ -1,0 +1,101 @@
+//iterative
+
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to perform iterative inorder traversal of a binary tree
+void inorderTraversal(TreeNode* root) {
+    if (root == nullptr) return;
+
+    stack<TreeNode*> st;
+    TreeNode* current = root;
+
+    while (current != nullptr || !st.empty()) {
+        // Traverse to the leftmost node
+        while (current != nullptr) {
+            st.push(current);
+            current = current->left;
+        }
+
+        // Pop the top node from the stack
+        current = st.top();
+        st.pop();
+
+        // Process the current node
+        cout << current->val << " ";
+
+        // Traverse to the right subtree
+        current = current->right;
+    }
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+
+    // Perform inorder traversal
+    cout << "Inorder traversal of the binary tree: ";
+    inorderTraversal(root);
+    cout << endl;
+
+    return 0;
+}
+
+
+//recursive
+
+#include <iostream>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to perform recursive inorder traversal of a binary tree
+void inorderTraversal(TreeNode* root) {
+    if (root == nullptr) return;
+
+    // Traverse left subtree
+    inorderTraversal(root->left);
+
+    // Process current node
+    cout << root->val << " ";
+
+    // Traverse right subtree
+    inorderTraversal(root->right);
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+
+    // Perform inorder traversal
+    cout << "Inorder traversal of the binary tree: ";
+    inorderTraversal(root);
+    cout << endl;
+
+    return 0;
+}
