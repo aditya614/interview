@@ -75,3 +75,94 @@ int main() {
 
     return 0;
 }
+
+
+//iterative
+#include <iostream>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Structure to hold information about a tree node and its sum up to that node
+struct NodeSum {
+    TreeNode* node;
+    int sum;
+    NodeSum(TreeNode* n, int s) : node(n), sum(s) {}
+};
+
+// Function to find all paths in the binary tree that sum up to k iteratively
+vector<vector<int>> kSumPath(TreeNode* root, int k) {
+    vector<vector<int>> result;
+    if (root == nullptr) return result;
+
+    stack<NodeSum> stk;
+    stk.push(NodeSum(root, 0));
+
+    while (!stk.empty()) {
+        NodeSum current = stk.top();
+        stk.pop();
+
+        TreeNode* node = current.node;
+        int sum = current.sum + node->val;
+
+        // Store the current path
+        vector<int> path;
+        TreeNode* temp = node;
+        while (temp != root) {
+            path.push_back(temp->val);
+            temp = stk.top().node;
+            stk.pop();
+        }
+        path.push_back(root->val);
+
+        // Check if the current path sums up to k
+        if (sum == k) {
+            result.push_back(path);
+        }
+
+        // Push the children with their updated sums onto the stack
+        if (node->right) stk.push(NodeSum(node->right, sum));
+        if (node->left) stk.push(NodeSum(node->left, sum));
+    }
+
+    return result;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(10);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(-3);
+    root->left->left = new TreeNode(3);
+    root->left->right = new TreeNode(2);
+    root->right->right = new TreeNode(11);
+    root->left->left->left = new TreeNode(3);
+    root->left->left->right = new TreeNode(-2);
+    root->left->right->right = new TreeNode(1);
+
+    int k = 8;
+
+    // Find all paths with sum k in the binary tree
+    vector<vector<int>> paths = kSumPath(root, k);
+
+    // Print the paths
+    cout << "Paths with sum " << k << ":" << endl;
+    for (const auto& path : paths) {
+        for (int val : path) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
