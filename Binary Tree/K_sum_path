@@ -1,0 +1,77 @@
+To find all the paths in a binary tree that sum up to a given value k,
+you can use a depth-first search (DFS)
+approach with backtracking. Here's a C++ implementation:
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Helper function to find all paths with sum k starting from a given node
+void findPaths(TreeNode* root, int k, vector<int>& path, vector<vector<int>>& result) {
+    if (root == nullptr) return;
+
+    // Add the current node to the path
+    path.push_back(root->val);
+
+    // Check if the current path equals k
+    int sum = 0;
+    for (int i = path.size() - 1; i >= 0; --i) {
+        sum += path[i];
+        if (sum == k) {
+            result.push_back(vector<int>(path.begin() + i, path.end()));
+        }
+    }
+
+    // Recursively search in the left and right subtrees
+    findPaths(root->left, k, path, result);
+    findPaths(root->right, k, path, result);
+
+    // Backtrack: remove the current node from the path
+    path.pop_back();
+}
+
+// Function to find all paths in the binary tree that sum up to k
+vector<vector<int>> kSumPath(TreeNode* root, int k) {
+    vector<vector<int>> result;
+    vector<int> path;
+    findPaths(root, k, path, result);
+    return result;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(10);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(-3);
+    root->left->left = new TreeNode(3);
+    root->left->right = new TreeNode(2);
+    root->right->right = new TreeNode(11);
+    root->left->left->left = new TreeNode(3);
+    root->left->left->right = new TreeNode(-2);
+    root->left->right->right = new TreeNode(1);
+
+    int k = 8;
+
+    // Find all paths with sum k in the binary tree
+    vector<vector<int>> paths = kSumPath(root, k);
+
+    // Print the paths
+    cout << "Paths with sum " << k << ":" << endl;
+    for (const auto& path : paths) {
+        for (int val : path) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
