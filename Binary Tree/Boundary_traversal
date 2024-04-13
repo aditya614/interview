@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to print the left boundary of a binary tree (excluding leaf nodes)
+void printLeftBoundary(TreeNode* root, vector<int>& result) {
+    if (root == nullptr || (root->left == nullptr && root->right == nullptr)) return;
+
+    result.push_back(root->val);
+
+    if (root->left != nullptr) {
+        printLeftBoundary(root->left, result);
+    } else {
+        printLeftBoundary(root->right, result);
+    }
+}
+
+// Function to print the leaf nodes of a binary tree
+void printLeaves(TreeNode* root, vector<int>& result) {
+    if (root == nullptr) return;
+
+    if (root->left == nullptr && root->right == nullptr) {
+        result.push_back(root->val);
+        return;
+    }
+
+    printLeaves(root->left, result);
+    printLeaves(root->right, result);
+}
+
+// Function to print the right boundary of a binary tree (excluding leaf nodes)
+void printRightBoundary(TreeNode* root, vector<int>& result) {
+    if (root == nullptr || (root->left == nullptr && root->right == nullptr)) return;
+
+    if (root->right != nullptr) {
+        printRightBoundary(root->right, result);
+    } else {
+        printRightBoundary(root->left, result);
+    }
+
+    result.push_back(root->val);
+}
+
+// Function to perform boundary traversal of a binary tree
+vector<int> boundaryTraversal(TreeNode* root) {
+    vector<int> result;
+
+    if (root == nullptr) return result;
+
+    // Print the root node
+    result.push_back(root->val);
+
+    // Print the left boundary (excluding leaf nodes)
+    printLeftBoundary(root->left, result);
+
+    // Print the leaf nodes from left to right
+    printLeaves(root->left, result);
+    printLeaves(root->right, result);
+
+    // Print the right boundary (excluding leaf nodes)
+    printRightBoundary(root->right, result);
+
+    return result;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(7);
+    root->left->left->left = new TreeNode(8);
+    root->left->left->right = new TreeNode(9);
+    root->left->right->left = new TreeNode(10);
+    root->left->right->right = new TreeNode(11);
+    root->right->left->left = new TreeNode(12);
+    root->right->left->right = new TreeNode(13);
+    root->right->right->left = new TreeNode(14);
+    root->right->right->right = new TreeNode(15);
+
+    // Perform boundary traversal
+    cout << "Boundary traversal of the binary tree: ";
+    vector<int> result = boundaryTraversal(root);
+    for (int val : result) {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
