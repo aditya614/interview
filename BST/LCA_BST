@@ -54,3 +54,68 @@ int main() {
 
     return 0;
 }
+
+
+//Iterative
+
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the Lowest Common Ancestor (LCA) of two nodes in a BST
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // Start from the root node
+    while (root != nullptr) {
+        // If both nodes are smaller than the root, LCA lies in the left subtree
+        if (p->val < root->val && q->val < root->val) {
+            root = root->left;
+        }
+        // If both nodes are greater than the root, LCA lies in the right subtree
+        else if (p->val > root->val && q->val > root->val) {
+            root = root->right;
+        }
+        // If one node is smaller and the other is greater, or if one of the nodes is the root, then the root is the LCA
+        else {
+            return root;
+        }
+    }
+    return nullptr; // If no LCA found
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating a sample binary search tree
+    TreeNode* root = new TreeNode(20);
+    root->left = new TreeNode(10);
+    root->right = new TreeNode(30);
+    root->left->left = new TreeNode(5);
+    root->left->right = new TreeNode(15);
+    root->right->left = new TreeNode(25);
+    root->right->right = new TreeNode(35);
+
+    TreeNode* p = root->left->left; // Node 5
+    TreeNode* q = root->left->right; // Node 15
+
+    TreeNode* lca = lowestCommonAncestor(root, p, q);
+    cout << "Lowest Common Ancestor of " << p->val << " and " << q->val << " is: " << lca->val << endl;
+
+    // Delete the binary tree to free memory
+    deleteTree(root);
+
+    return 0;
+}
+
