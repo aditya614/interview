@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Structure to store the maximum sums
+struct MaxSum {
+    int includeNode;
+    int excludeNode;
+};
+
+// Function to find the maximum sum of non-adjacent nodes in a binary tree
+MaxSum maxSumNonAdjacent(TreeNode* root) {
+    if (root == nullptr) {
+        return {0, 0};
+    }
+
+    // Recursively calculate maximum sums for left and right subtrees
+    MaxSum leftSum = maxSumNonAdjacent(root->left);
+    MaxSum rightSum = maxSumNonAdjacent(root->right);
+
+    // Calculate the maximum sum including and excluding the current node
+    int includeRoot = root->val + leftSum.excludeNode + rightSum.excludeNode;
+    int excludeRoot = max(leftSum.includeNode, leftSum.excludeNode) +
+                      max(rightSum.includeNode, rightSum.excludeNode);
+
+    return {includeRoot, excludeRoot};
+}
+
+// Function to find the maximum sum of non-adjacent nodes in a binary tree
+int maxSumNonAdjacent(TreeNode* root) {
+    MaxSum result = maxSumNonAdjacent(root);
+    return max(result.includeNode, result.excludeNode);
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->right = new TreeNode(3);
+    root->right->right = new TreeNode(1);
+
+    // Find the maximum sum of non-adjacent nodes
+    int maxSum = maxSumNonAdjacent(root);
+    cout << "Maximum sum of non-adjacent nodes: " << maxSum << endl;
+
+    return 0;
+}
