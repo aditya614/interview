@@ -54,3 +54,261 @@ int main() {
 
     return 0;
 }
+
+
+//iterative
+v#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the Lowest Common Ancestor (LCA) of two nodes in a binary tree iteratively
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // Create a map to store the parent node of each node visited during the traversal
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    // Perform a depth-first search (DFS) traversal and store the parent nodes
+    stack<TreeNode*> stack;
+    parent[root] = nullptr;
+    stack.push(root);
+
+    while (!stack.empty()) {
+        TreeNode* node = stack.top();
+        stack.pop();
+
+        if (node->right) {
+            parent[node->right] = node;
+            stack.push(node->right);
+        }
+        if (node->left) {
+            parent[node->left] = node;
+            stack.push(node->left);
+        }
+    }
+
+    // Find the path from the root to node p
+    vector<TreeNode*> path_p;
+    while (p) {
+        path_p.push_back(p);
+        p = parent[p];
+    }
+
+    // Find the path from the root to node q and check for the first common node
+    while (q) {
+        if (find(path_p.begin(), path_p.end(), q) != path_p.end()) {
+            return q;
+        }
+        q = parent[q];
+    }
+
+    return nullptr; // No common ancestor found
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(1);
+    root->left->left = new TreeNode(6);
+    root->left->right = new TreeNode(2);
+    root->right->left = new TreeNode(0);
+    root->right->right = new TreeNode(8);
+    root->left->right->left = new TreeNode(7);
+    root->left->right->right = new TreeNode(4);
+
+    // Define the nodes for which we want to find the LCA
+    TreeNode* p = root->left;
+    TreeNode* q = root->right;
+
+    // Find the LCA of the given nodes
+    TreeNode* lcaNode = lowestCommonAncestor(root, p, q);
+
+    // Print the value of the LCA node
+    if (lcaNode) {
+        cout << "Lowest Common Ancestor of " << p->val << " and " << q->val << " is: " << lcaNode->val << endl;
+    } else {
+        cout << "No common ancestor found." << endl;
+    }
+
+    return 0;
+}
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the Lowest Common Ancestor (LCA) of two nodes in a binary tree iteratively
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // Create a map to store the parent node of each node visited during the traversal
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    // Perform a depth-first search (DFS) traversal and store the parent nodes
+    stack<TreeNode*> stack;
+    parent[root] = nullptr;
+    stack.push(root);
+
+    while (!stack.empty()) {
+        TreeNode* node = stack.top();
+        stack.pop();
+
+        if (node->right) {
+            parent[node->right] = node;
+            stack.push(node->right);
+        }
+        if (node->left) {
+            parent[node->left] = node;
+            stack.push(node->left);
+        }
+    }
+
+    // Find the path from the root to node p
+    vector<TreeNode*> path_p;
+    while (p) {
+        path_p.push_back(p);
+        p = parent[p];
+    }
+
+    // Find the path from the root to node q and check for the first common node
+    while (q) {
+        if (find(path_p.begin(), path_p.end(), q) != path_p.end()) {
+            return q;
+        }
+        q = parent[q];
+    }
+
+    return nullptr; // No common ancestor found
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(1);
+    root->left->left = new TreeNode(6);
+    root->left->right = new TreeNode(2);
+    root->right->left = new TreeNode(0);
+    root->right->right = new TreeNode(8);
+    root->left->right->left = new TreeNode(7);
+    root->left->right->right = new TreeNode(4);
+
+    // Define the nodes for which we want to find the LCA
+    TreeNode* p = root->left;
+    TreeNode* q = root->right;
+
+    // Find the LCA of the given nodes
+    TreeNode* lcaNode = lowestCommonAncestor(root, p, q);
+
+    // Print the value of the LCA node
+    if (lcaNode) {
+        cout << "Lowest Common Ancestor of " << p->val << " and " << q->val << " is: " << lcaNode->val << endl;
+    } else {
+        cout << "No common ancestor found." << endl;
+    }
+
+    return 0;
+}
+
+//iterative
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the Lowest Common Ancestor (LCA) of two nodes in a binary tree iteratively
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // Create a map to store the parent node of each node visited during the traversal
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    // Perform a depth-first search (DFS) traversal and store the parent nodes
+    stack<TreeNode*> stack;
+    parent[root] = nullptr;
+    stack.push(root);
+
+    while (!stack.empty()) {
+        TreeNode* node = stack.top();
+        stack.pop();
+
+        if (node->right) {
+            parent[node->right] = node;
+            stack.push(node->right);
+        }
+        if (node->left) {
+            parent[node->left] = node;
+            stack.push(node->left);
+        }
+    }
+
+    // Find the path from the root to node p
+    vector<TreeNode*> path_p;
+    while (p) {
+        path_p.push_back(p);
+        p = parent[p];
+    }
+
+    // Find the path from the root to node q and check for the first common node
+    while (q) {
+        if (find(path_p.begin(), path_p.end(), q) != path_p.end()) {
+            return q;
+        }
+        q = parent[q];
+    }
+
+    return nullptr; // No common ancestor found
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(1);
+    root->left->left = new TreeNode(6);
+    root->left->right = new TreeNode(2);
+    root->right->left = new TreeNode(0);
+    root->right->right = new TreeNode(8);
+    root->left->right->left = new TreeNode(7);
+    root->left->right->right = new TreeNode(4);
+
+    // Define the nodes for which we want to find the LCA
+    TreeNode* p = root->left;
+    TreeNode* q = root->right;
+
+    // Find the LCA of the given nodes
+    TreeNode* lcaNode = lowestCommonAncestor(root, p, q);
+
+    // Print the value of the LCA node
+    if (lcaNode) {
+        cout << "Lowest Common Ancestor of " << p->val << " and " << q->val << " is: " << lcaNode->val << endl;
+    } else {
+        cout << "No common ancestor found." << endl;
+    }
+
+    return 0;
+}
+
