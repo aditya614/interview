@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the k-th ancestor of a node in a binary tree
+TreeNode* findKthAncestor(TreeNode* root, TreeNode* node, int k) {
+    if (root == nullptr) return nullptr;
+    if (root == node || k == 0) return root;
+
+    TreeNode* left = findKthAncestor(root->left, node, k - 1);
+    TreeNode* right = findKthAncestor(root->right, node, k - 1);
+
+    return (left != nullptr) ? left : right;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(7);
+
+    TreeNode* node = root->left->right; // Node for which we want to find the ancestor
+    int k = 2; // k-th ancestor
+
+    // Find the k-th ancestor of the given node
+    TreeNode* ancestor = findKthAncestor(root, node, k);
+
+    if (ancestor)
+        cout << "The " << k << "-th ancestor of node " << node->val << " is: " << ancestor->val << endl;
+    else
+        cout << "Node doesn't have " << k << "-th ancestor." << endl;
+
+    return 0;
+}
