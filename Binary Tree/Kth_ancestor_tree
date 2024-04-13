@@ -1,3 +1,4 @@
+//recursive
 #include <iostream>
 #include <vector>
 
@@ -42,6 +43,84 @@ int main() {
         cout << "The " << k << "-th ancestor of node " << node->val << " is: " << ancestor->val << endl;
     else
         cout << "Node doesn't have " << k << "-th ancestor." << endl;
+
+    return 0;
+}
+
+//iterative
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the k-th ancestor of a node in a binary tree
+TreeNode* kthAncestor(TreeNode* root, TreeNode* node, int k) {
+    if (root == nullptr || k < 0) return nullptr;
+
+    // Map to store parent of each node
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    // Perform a DFS and store the parent of each node
+    stack<TreeNode*> stk;
+    stk.push(root);
+    parent[root] = nullptr;
+
+    while (!stk.empty()) {
+        TreeNode* current = stk.top();
+        stk.pop();
+
+        if (current->right) {
+            parent[current->right] = current;
+            stk.push(current->right);
+        }
+        if (current->left) {
+            parent[current->left] = current;
+            stk.push(current->left);
+        }
+    }
+
+    // Traverse up the tree from the given node to find the k-th ancestor
+    while (node && k > 0) {
+        node = parent[node];
+        k--;
+    }
+
+    return node;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(7);
+
+    // Define the node for which we want to find the k-th ancestor
+    TreeNode* node = root->left->right; // Node for which we want to find the ancestor
+    int k = 2; // k-th ancestor
+
+    // Find the k-th ancestor of the given node
+    TreeNode* ancestor = kthAncestor(root, node, k);
+
+    // Print the value of the k-th ancestor node
+    if (ancestor) {
+        cout << "The " << k << "-th ancestor of node " << node->val << " is: " << ancestor->val << endl;
+    } else {
+        cout << "Node doesn't have " << k << "-th ancestor." << endl;
+    }
 
     return 0;
 }
