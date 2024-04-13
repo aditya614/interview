@@ -1,0 +1,164 @@
+//Recursive
+
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the predecessor and successor of a given node in a BST
+void findPredecessorSuccessor(TreeNode* root, TreeNode*& predecessor, TreeNode*& successor, int key) {
+    if (root == nullptr) return;
+
+    // If the key matches the root's value
+    if (root->val == key) {
+        // Predecessor is the maximum value in the left subtree
+        if (root->left != nullptr) {
+            TreeNode* temp = root->left;
+            while (temp->right != nullptr) {
+                temp = temp->right;
+            }
+            predecessor = temp;
+        }
+
+        // Successor is the minimum value in the right subtree
+        if (root->right != nullptr) {
+            TreeNode* temp = root->right;
+            while (temp->left != nullptr) {
+                temp = temp->left;
+            }
+            successor = temp;
+        }
+        return;
+    }
+
+    // If key is less than the root's value, search in the left subtree
+    if (key < root->val) {
+        successor = root;
+        findPredecessorSuccessor(root->left, predecessor, successor, key);
+    }
+    // If key is greater than the root's value, search in the right subtree
+    else {
+        predecessor = root;
+        findPredecessorSuccessor(root->right, predecessor, successor, key);
+    }
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating a sample binary search tree
+    TreeNode* root = new TreeNode(20);
+    root->left = new TreeNode(10);
+    root->right = new TreeNode(30);
+    root->left->left = new TreeNode(5);
+    root->left->right = new TreeNode(15);
+    root->right->left = new TreeNode(25);
+    root->right->right = new TreeNode(35);
+
+    int key = 15; // Key for which predecessor and successor are to be found
+    TreeNode* predecessor = nullptr;
+    TreeNode* successor = nullptr;
+    findPredecessorSuccessor(root, predecessor, successor, key);
+
+    cout << "Predecessor of " << key << " is: " << (predecessor ? predecessor->val : -1) << endl;
+    cout << "Successor of " << key << " is: " << (successor ? successor->val : -1) << endl;
+
+    // Delete the binary tree to free memory
+    deleteTree(root);
+
+    return 0;
+}
+
+
+//Iterative
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to find the predecessor and successor of a given node in a BST iteratively
+void findPredecessorSuccessor(TreeNode* root, int key) {
+    TreeNode* predecessor = nullptr;
+    TreeNode* successor = nullptr;
+
+    // Start from the root node
+    while (root != nullptr) {
+        if (root->val == key) {
+            // If the key is found, set predecessor and successor
+            if (root->left != nullptr) {
+                TreeNode* temp = root->left;
+                while (temp->right != nullptr) {
+                    temp = temp->right;
+                }
+                predecessor = temp;
+            }
+            if (root->right != nullptr) {
+                TreeNode* temp = root->right;
+                while (temp->left != nullptr) {
+                    temp = temp->left;
+                }
+                successor = temp;
+            }
+            break;
+        } else if (key < root->val) {
+            // If key is less than the current node's value, update successor and move to the left subtree
+            successor = root;
+            root = root->left;
+        } else {
+            // If key is greater than the current node's value, update predecessor and move to the right subtree
+            predecessor = root;
+            root = root->right;
+        }
+    }
+
+    // Print the predecessor and successor
+    cout << "Predecessor of " << key << " is: " << (predecessor ? predecessor->val : -1) << endl;
+    cout << "Successor of " << key << " is: " << (successor ? successor->val : -1) << endl;
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating a sample binary search tree
+    TreeNode* root = new TreeNode(20);
+    root->left = new TreeNode(10);
+    root->right = new TreeNode(30);
+    root->left->left = new TreeNode(5);
+    root->left->right = new TreeNode(15);
+    root->right->left = new TreeNode(25);
+    root->right->right = new TreeNode(35);
+
+    int key = 15; // Key for which predecessor and successor are to be found
+    findPredecessorSuccessor(root, key);
+
+    // Delete the binary tree to free memory
+    deleteTree(root);
+
+    return 0;
+}
