@@ -1,0 +1,61 @@
+#include <iostream>
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to check if the sum of leaf nodes is equal to the value of the root node
+bool isLeafSumEqualToRoot(TreeNode* root) {
+    if (root == nullptr) return false;
+    
+    int leafSum = 0;
+    bool result = false;
+    
+    // Helper function to recursively calculate the sum of leaf nodes
+    function<void(TreeNode*, int&)> calculateLeafSum = [&](TreeNode* node, int& sum) {
+        if (node == nullptr) return;
+        
+        if (node->left == nullptr && node->right == nullptr) {
+            sum += node->val; // Add the value of leaf node to the sum
+        }
+        
+        // Recursively calculate the sum of leaf nodes in the left and right subtrees
+        calculateLeafSum(node->left, sum);
+        calculateLeafSum(node->right, sum);
+    };
+    
+    // Calculate the sum of leaf nodes
+    calculateLeafSum(root, leafSum);
+    
+    // Check if the sum of leaf nodes is equal to the value of the root node
+    if (leafSum == root->val) {
+        result = true;
+    }
+    
+    return result;
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(10);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(15);
+    root->left->left = new TreeNode(2);
+    root->left->right = new TreeNode(7);
+    root->right->right = new TreeNode(20);
+
+    // Check if the sum of leaf nodes is equal to the value of the root node
+    if (isLeafSumEqualToRoot(root)) {
+        cout << "The sum of leaf nodes is equal to the value of the root node." << endl;
+    } else {
+        cout << "The sum of leaf nodes is not equal to the value of the root node." << endl;
+    }
+
+    return 0;
+}
