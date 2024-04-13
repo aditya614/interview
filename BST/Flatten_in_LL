@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+void flatten(TreeNode* root) {
+    if (root == nullptr) return;
+
+    TreeNode* curr = root;
+    while (curr != nullptr) {
+        if (curr->left != nullptr) {
+            // Find the rightmost node in the left subtree
+            TreeNode* rightmost = curr->left;
+            while (rightmost->right != nullptr) {
+                rightmost = rightmost->right;
+            }
+
+            // Move the right subtree of the current node to the rightmost node of its left subtree
+            rightmost->right = curr->right;
+            // Move the left subtree to the right
+            curr->right = curr->left;
+            curr->left = nullptr;
+        }
+        // Move to the right child
+        curr = curr->right;
+    }
+}
+
+// Function to print the flattened BST (linked list)
+void printFlattenedList(TreeNode* root) {
+    while (root != nullptr) {
+        cout << root->val << " ";
+        root = root->right;
+    }
+    cout << endl;
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating a sample binary search tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(5);
+    root->left->left = new TreeNode(3);
+    root->left->right = new TreeNode(4);
+    root->right->right = new TreeNode(6);
+
+    cout << "Original BST:" << endl;
+    printFlattenedList(root);
+
+    // Flatten the BST into a sorted linked list
+    flatten(root);
+
+    cout << "Flattened list:" << endl;
+    printFlattenedList(root);
+
+    // Delete the binary tree to free memory
+    deleteTree(root);
+
+    return 0;
+}
