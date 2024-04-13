@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm> // for max function
+
+using namespace std;
+
+// Definition of a tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to calculate the height of a binary tree
+int heightOfTree(TreeNode* root) {
+    if (root == nullptr) return 0;
+    
+    // Calculate the height of the left and right subtrees recursively
+    int leftHeight = heightOfTree(root->left);
+    int rightHeight = heightOfTree(root->right);
+    
+    // Return the maximum height of the left and right subtrees, plus 1 for the current node
+    return max(leftHeight, rightHeight) + 1;
+}
+
+// Function to check if a binary tree is balanced
+bool isBalanced(TreeNode* root) {
+    if (root == nullptr) return true;
+    
+    // Calculate the height of the left and right subtrees
+    int leftHeight = heightOfTree(root->left);
+    int rightHeight = heightOfTree(root->right);
+    
+    // Check if the absolute difference in height between the left and right subtrees is <= 1
+    if (abs(leftHeight - rightHeight) > 1) {
+        return false;
+    }
+    
+    // Recursively check if both subtrees are balanced
+    return isBalanced(root->left) && isBalanced(root->right);
+}
+
+int main() {
+    // Constructing the binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->right = new TreeNode(6);
+    root->right->right->right = new TreeNode(7);
+
+    // Check if the tree is balanced
+    if (isBalanced(root)) {
+        cout << "The tree is balanced." << endl;
+    } else {
+        cout << "The tree is not balanced." << endl;
+    }
+
+    return 0;
+}
