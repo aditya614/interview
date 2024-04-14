@@ -1,0 +1,279 @@
+(* To merge two Binary Search Trees (BSTs) into one balanced BST, you can follow these steps:
+
+Perform an in-order traversal of both BSTs to obtain sorted arrays of their elements.
+Merge the two sorted arrays into one sorted array.
+Construct a new balanced BST from the merged sorted array. *)
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to perform in-order traversal of a BST and store elements in a vector
+void inOrderTraversal(TreeNode* root, vector<int>& arr) {
+    if (root == nullptr) return;
+    inOrderTraversal(root->left, arr);
+    arr.push_back(root->val);
+    inOrderTraversal(root->right, arr);
+}
+
+// Function to merge two sorted arrays into one sorted array
+vector<int> mergeSortedArrays(vector<int>& arr1, vector<int>& arr2) {
+    vector<int> merged;
+    int i = 0, j = 0;
+    while (i < arr1.size() && j < arr2.size()) {
+        if (arr1[i] < arr2[j]) {
+            merged.push_back(arr1[i]);
+            i++;
+        } else {
+            merged.push_back(arr2[j]);
+            j++;
+        }
+    }
+    while (i < arr1.size()) {
+        merged.push_back(arr1[i]);
+        i++;
+    }
+    while (j < arr2.size()) {
+        merged.push_back(arr2[j]);
+        j++;
+    }
+    return merged;
+}
+
+// Function to construct a balanced BST from a sorted array
+TreeNode* sortedArrayToBST(vector<int>& arr, int start, int end) {
+    if (start > end) return nullptr;
+    int mid = (start + end) / 2;
+    TreeNode* root = new TreeNode(arr[mid]);
+    root->left = sortedArrayToBST(arr, start, mid - 1);
+    root->right = sortedArrayToBST(arr, mid + 1, end);
+    return root;
+}
+
+// Function to merge two BSTs into one balanced BST
+TreeNode* mergeBSTs(TreeNode* root1, TreeNode* root2) {
+    vector<int> arr1, arr2;
+    // Perform in-order traversal of both BSTs and store elements in arrays
+    inOrderTraversal(root1, arr1);
+    inOrderTraversal(root2, arr2);
+    // Merge the sorted arrays into one sorted array
+    vector<int> merged = mergeSortedArrays(arr1, arr2);
+    // Construct a balanced BST from the merged sorted array
+    return sortedArrayToBST(merged, 0, merged.size() - 1);
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating BST 1
+    TreeNode* root1 = new TreeNode(5);
+    root1->left = new TreeNode(3);
+    root1->right = new TreeNode(6);
+
+    // Creating BST 2
+    TreeNode* root2 = new TreeNode(2);
+    root2->left = new TreeNode(1);
+    root2->right = new TreeNode(4);
+
+    // Merging BSTs
+    TreeNode* mergedBST = mergeBSTs(root1, root2);
+
+    // Print the in-order traversal of the merged BST
+    cout << "In-order traversal of the merged BST:" << endl;
+    inOrderTraversal(mergedBST, arr);
+    for (int val : arr) {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    // Delete the binary trees to free memory
+    deleteTree(root1);
+    deleteTree(root2);
+    deleteTree(mergedBST);
+
+    return 0;
+}
+(* In this implementation:
+
+inOrderTraversal is a recursive function to perform in-order traversal of a BST and store its elements in a vector.
+mergeSortedArrays merges two sorted arrays into one sorted array.
+sortedArrayToBST constructs a balanced BST from a sorted array using a recursive approach.
+mergeBSTs merges two BSTs into one balanced BST by performing in-order traversal, merging the sorted arrays,
+and constructing a balanced BST from the merged array.
+The main function creates two sample BSTs, merges them, and prints the in-order traversal of the merged BST.
+Finally, it deletes the binary trees to free memory. *)
+____________________________________________________________________________________________________________________________________-
+
+(* To merge two Binary Search Trees (BSTs) by converting them into sorted linked lists,
+merging the linked lists, and then reconstructing a balanced BST from the merged linked list, you can follow these steps:
+
+Convert both BSTs into sorted linked lists using an in-order traversal.
+Merge the two sorted linked lists into one sorted linked list.
+Construct a new balanced BST from the merged sorted linked list. *)
+
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Definition for a singly linked list node
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+// Function to convert a BST to a sorted linked list (in-order traversal)
+ListNode* bstToLinkedList(TreeNode* root) {
+    ListNode* dummy = new ListNode(0);
+    ListNode* curr = dummy;
+    TreeNode* current = root;
+    while (current != nullptr || !s.empty()) {
+        while (current != nullptr) {
+            s.push(current);
+            current = current->left;
+        }
+        current = s.top();
+        s.pop();
+        curr->next = new ListNode(current->val);
+        curr = curr->next;
+        current = current->right;
+    }
+    return dummy->next;
+}
+
+// Function to merge two sorted linked lists into one sorted linked list
+ListNode* mergeLists(ListNode* l1, ListNode* l2) {
+    ListNode* dummy = new ListNode(0);
+    ListNode* current = dummy;
+    while (l1 != nullptr && l2 != nullptr) {
+        if (l1->val < l2->val) {
+            current->next = l1;
+            l1 = l1->next;
+        } else {
+            current->next = l2;
+            l2 = l2->next;
+        }
+        current = current->next;
+    }
+    if (l1 != nullptr) {
+        current->next = l1;
+    }
+    if (l2 != nullptr) {
+        current->next = l2;
+    }
+    return dummy->next;
+}
+
+// Function to convert a sorted linked list to a balanced BST
+TreeNode* sortedListToBST(ListNode* head) {
+    if (head == nullptr) return nullptr;
+    if (head->next == nullptr) return new TreeNode(head->val);
+
+    ListNode* slow = head;
+    ListNode* fast = head;
+    ListNode* prev = nullptr;
+
+    // Find the middle node using the slow and fast pointers
+    while (fast != nullptr && fast->next != nullptr) {
+        prev = slow;
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Break the list into two parts at the middle node
+    if (prev != nullptr) {
+        prev->next = nullptr;
+    }
+
+    // Create a new tree node for the middle node of the list
+    TreeNode* root = new TreeNode(slow->val);
+
+    // Recursively build the left and right subtrees
+    root->left = sortedListToBST(head);
+    root->right = sortedListToBST(slow->next);
+
+    return root;
+}
+
+// Function to merge two BSTs into one balanced BST
+TreeNode* mergeBSTs(TreeNode* root1, TreeNode* root2) {
+    // Convert BSTs to sorted linked lists
+    ListNode* list1 = bstToLinkedList(root1);
+    ListNode* list2 = bstToLinkedList(root2);
+
+    // Merge the sorted linked lists
+    ListNode* mergedList = mergeLists(list1, list2);
+
+    // Construct a balanced BST from the merged sorted linked list
+    return sortedListToBST(mergedList);
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+// Function to delete a linked list
+void deleteList(ListNode* head) {
+    while (head != nullptr) {
+        ListNode* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+int main() {
+    // Creating BST 1
+    TreeNode* root1 = new TreeNode(5);
+    root1->left = new TreeNode(3);
+    root1->right = new TreeNode(8);
+
+    // Creating BST 2
+    TreeNode* root2 = new TreeNode(4);
+    root2->left = new TreeNode(2);
+    root2->right = new TreeNode(6);
+
+    // Merging BSTs
+    TreeNode* mergedBST = mergeBSTs(root1, root2);
+
+    // Delete the original BSTs to free memory
+    deleteTree(root1);
+    deleteTree(root2);
+
+    // Delete the merged BST to free memory
+    deleteTree(mergedBST);
+
+    return 0;
+}
+(* In this implementation:
+
+bstToLinkedList converts a BST to a sorted linked list using an in-order traversal.
+mergeLists merges two sorted linked lists into one sorted linked list.
+sortedListToBST constructs a balanced BST from a sorted linked list using a recursive approach.
+mergeBSTs merges two BSTs into one balanced BST by converting them into sorted linked lists,
+merging the linked lists, and constructing a balanced BST from the merged linked list.
+The main function creates two sample BSTs, merges them, and deletes the original and merged BSTs to free memory. *)
