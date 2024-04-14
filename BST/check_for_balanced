@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to calculate the height of a binary tree
+int height(TreeNode* root) {
+    if (root == nullptr) return 0;
+    return 1 + max(height(root->left), height(root->right));
+}
+
+// Function to check if a binary tree is balanced
+bool isBalanced(TreeNode* root) {
+    if (root == nullptr) return true;
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    // Check if the height difference of the left and right subtrees is <= 1
+    if (abs(leftHeight - rightHeight) <= 1 && isBalanced(root->left) && isBalanced(root->right)) {
+        return true;
+    }
+    return false;
+}
+
+// Function to delete a binary tree
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+int main() {
+    // Creating a balanced binary search tree
+    TreeNode* balancedRoot = new TreeNode(10);
+    balancedRoot->left = new TreeNode(5);
+    balancedRoot->right = new TreeNode(15);
+    balancedRoot->left->left = new TreeNode(3);
+    balancedRoot->left->right = new TreeNode(7);
+    balancedRoot->right->right = new TreeNode(20);
+
+    // Creating an unbalanced binary search tree
+    TreeNode* unbalancedRoot = new TreeNode(10);
+    unbalancedRoot->left = new TreeNode(5);
+    unbalancedRoot->right = new TreeNode(15);
+    unbalancedRoot->left->left = new TreeNode(3);
+    unbalancedRoot->left->left->left = new TreeNode(2);
+
+    // Checking if the trees are balanced
+    if (isBalanced(balancedRoot)) {
+        cout << "The balanced tree is indeed balanced." << endl;
+    } else {
+        cout << "The balanced tree is not balanced." << endl;
+    }
+
+    if (isBalanced(unbalancedRoot)) {
+        cout << "The unbalanced tree is indeed balanced." << endl;
+    } else {
+        cout << "The unbalanced tree is not balanced." << endl;
+    }
+
+    // Delete the binary trees to free memory
+    deleteTree(balancedRoot);
+    deleteTree(unbalancedRoot);
+
+    return 0;
+}
