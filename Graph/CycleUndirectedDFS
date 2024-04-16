@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool hasCycleDFS(vector<vector<int>>& adjList, int v, vector<bool>& visited, int parent) {
+    visited[v] = true; // Mark the current vertex as visited
+
+    // Visit all adjacent vertices of the current vertex
+    for (int neighbor : adjList[v]) {
+        if (!visited[neighbor]) { // If the neighbor is not visited yet
+            if (hasCycleDFS(adjList, neighbor, visited, v)) // Recur for the neighbor
+                return true; // If a cycle is found in the subtree rooted at neighbor, return true
+        } else if (neighbor != parent) { // If the neighbor is visited and not the parent
+            return true; // It means there's a cycle
+        }
+    }
+    return false; // No cycle found
+}
+
+bool hasCycle(vector<vector<int>>& adjList) {
+    int V = adjList.size(); // Number of vertices in the graph
+    vector<bool> visited(V, false); // Initialize visited array with false values
+
+    // Perform DFS traversal from each vertex
+    for (int i = 0; i < V; ++i) {
+        if (!visited[i]) { // If vertex i is not visited yet
+            if (hasCycleDFS(adjList, i, visited, -1)) // Recur for the vertex i
+                return true; // If a cycle is found in the subtree rooted at vertex i, return true
+        }
+    }
+    return false; // No cycle found
+}
+
+int main() {
+    int V = 5; // Number of vertices in the graph
+    vector<vector<int>> adjList(V); // Initialize adjacency list with V empty vectors
+
+    // Adding edges to the graph
+    adjList[0].push_back(1);
+    adjList[1].push_back(0);
+    adjList[1].push_back(2);
+    adjList[2].push_back(1);
+    adjList[2].push_back(3);
+    adjList[3].push_back(2);
+    adjList[3].push_back(4);
+    adjList[4].push_back(3);
+
+    // Check if the graph has a cycle
+    if (hasCycle(adjList)) {
+        cout << "Graph has a cycle." << endl;
+    } else {
+        cout << "Graph doesn't have a cycle." << endl;
+    }
+
+    return 0;
+}
