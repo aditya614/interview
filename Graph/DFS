@@ -1,0 +1,57 @@
+ #include <iostream>
+#include <vector>
+#include <stack>
+#include <unordered_set>
+using namespace std;
+
+// Function to perform Depth-First Search (DFS) on a graph represented using adjacency list
+void DFS(vector<vector<int>>& adjList, int startVertex) {
+    int V = adjList.size(); // Number of vertices in the graph
+    vector<bool> visited(V, false); // Initialize visited array with false values
+    stack<int> stk; // Initialize a stack for DFS traversal
+
+    // Mark the start vertex as visited and push it onto the stack
+    visited[startVertex] = true;
+    stk.push(startVertex);
+
+    // Perform DFS traversal
+    while (!stk.empty()) {
+        int currentVertex = stk.top(); // Get the top vertex from the stack
+        stk.pop(); // Pop the top vertex from the stack
+        cout << currentVertex << " "; // Print the current vertex
+
+        // Visit all adjacent vertices of the current vertex
+        for (int neighbor : adjList[currentVertex]) {
+            if (!visited[neighbor]) { // If the neighbor is not visited yet
+                visited[neighbor] = true; // Mark it as visited
+                stk.push(neighbor); // Push the neighbor onto the stack
+            }
+        }
+    }
+}
+
+int main() {
+    int V = 5; // Number of vertices in the graph
+    vector<vector<int>> adjList(V); // Initialize adjacency list with V empty vectors
+
+    // Adding edges to the graph
+    adjList[0].push_back(1);
+    adjList[0].push_back(4);
+    adjList[1].push_back(0);
+    adjList[1].push_back(2);
+    adjList[1].push_back(3);
+    adjList[1].push_back(4);
+    adjList[2].push_back(1);
+    adjList[2].push_back(3);
+    adjList[3].push_back(1);
+    adjList[3].push_back(2);
+    adjList[3].push_back(4);
+    adjList[4].push_back(0);
+    adjList[4].push_back(1);
+    adjList[4].push_back(3);
+
+    cout << "DFS Traversal starting from vertex 0: ";
+    DFS(adjList, 0); // Perform DFS traversal starting from vertex 0
+
+    return 0;
+}
